@@ -1,6 +1,5 @@
-import type {Message} from "../model/say";
-import type {Speaker} from "../model/speaker";
 import Word from "./word";
+import type {ConcatMessage} from "../model/exportMessage";
 
 export interface ExportResult {
     file: File;
@@ -8,9 +7,9 @@ export interface ExportResult {
 }
 
 export interface Exporter {
-    transform(messages: Message[], speakers: Speaker[]): Promise<ExportResult>;
+    transform(messages: ConcatMessage[]): Promise<ExportResult>;
 }
 
-export function exportFile(messages: Message[], speakers: Speaker[]) {
-    return new Word().transform(messages, speakers);
+export function exportFile(messages: ConcatMessage[]) {
+    return new Word().transform(messages);
 }

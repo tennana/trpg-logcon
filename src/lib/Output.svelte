@@ -1,9 +1,7 @@
 <script lang="ts">
-    import type {Message} from "../model/say";
-    import {sayStore} from "../model/say";
     import {exportFile} from "../exporter/exporter";
-    import type {Speaker} from "../model/speaker";
-    import {speakerStore} from "../model/speaker";
+    import type {ConcatMessage} from "../model/exportMessage";
+    import {exportMessageStore} from "../model/exportMessage";
 
     const downloadURL = (data, fileName) => {
         const a = document.createElement("a");
@@ -15,7 +13,7 @@
     };
 
     async function convert() {
-        const result = await exportFile($sayStore as Message[], $speakerStore as Speaker[]);
+        const result = await exportFile($exportMessageStore as ConcatMessage[]);
 
         const url = URL.createObjectURL(result.file);
         downloadURL(url, result.file.name);

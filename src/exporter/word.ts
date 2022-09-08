@@ -1,20 +1,27 @@
 import type {Exporter, ExportResult} from "./exporter";
-import type {Message} from "../model/say";
-import type {Speaker} from "../model/speaker";
-import {createReport} from "docx-templates/lib/browser";
+import type {ConcatMessage} from "../model/exportMessage";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
 
 export const literalXMLDelimiter = '||';
 
 export default class Word implements Exporter {
-    async transform(messages: Message[], speakers: Speaker[]): Promise<ExportResult> {
+    async transform(messages: ConcatMessage[]): Promise<ExportResult> {
         const templateDoc: ArrayBuffer = await fetch("/template/A5-001-1-cn.docx").then(res => res.arrayBuffer());
-        const doc = await createReport({
-            template: templateDoc,
-            data: {message: messages},
-            literalXMLDelimiter
-        }) as Uint8Array;
+        const zip = new PizZip(templateDoc);
+        const doc = new Docxtemplater(zip, {
+            paragraphLoop: true,
+            linebreaks: true,
+        });
+        doc.render({
+            messages: messages
+        })
+        const buf = doc.getZip().generate({
+            type: "blob",
+            compression: "DEFLATE",
+        });
         return {
-            file: new File([doc], "output.docx", {lastModified: new Date().getDate()}),
+            file: new File([buf], "output.docx", {lastModified: new Date().getDate()}),
             mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         };
     }
