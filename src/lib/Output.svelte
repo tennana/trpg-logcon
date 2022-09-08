@@ -1,10 +1,11 @@
 <script lang="ts">
+    import type {Message} from "../model/say";
     import {sayStore} from "../model/say";
+    import {exportFile} from "../exporter/exporter";
+    import type {Speaker} from "../model/speaker";
+    import {speakerStore} from "../model/speaker";
 
-    let doc;
-    import {createReport} from "docx-templates/lib/browser";
-
-    const downloadURL = (data, fileName, mimeType) => {
+    const downloadURL = (data, fileName) => {
         const a = document.createElement("a");
         a.href = data;
         a.download = fileName;
@@ -13,23 +14,15 @@
         a.remove();
     };
 
-    const saveDataToFile = (data, fileName, mimeType) => {
-        const blob = new Blob([data], { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        downloadURL(url, fileName, mimeType);
+    async function convert() {
+        const result = await exportFile($sayStore as Message[], $speakerStore as Speaker[]);
+
+        const url = URL.createObjectURL(result.file);
+        downloadURL(url, result.file.name);
         setTimeout(() => {
             URL.revokeObjectURL(url);
         }, 1000);
-    };
-
-    async function convert() {
-        const templateDoc: ArrayBuffer = await fetch("/template/A5-001-1-cn.docx").then(res => res.arrayBuffer());
-        doc = await createReport({template: templateDoc, data: {message: $sayStore}})
-        saveDataToFile(doc, "test.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     }
 </script>
 
 <button on:click={convert}>Go!</button>
-{#if doc}
-    <div id="doc-preview"></div>
-{/if}
