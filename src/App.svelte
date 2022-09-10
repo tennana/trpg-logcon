@@ -41,7 +41,7 @@
             {/each}
             </div>
         </Panel>
-        <Panel name="Word出力">
+        <Panel name="出力">
             <Output/>
         </Panel>
     {/if}

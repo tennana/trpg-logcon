@@ -2,6 +2,7 @@ import type {Exporter} from "./exporter";
 import WordTemplate from "./word";
 
 export interface Template {
+    id: number,
     name: string;
     type: 'Word';
     generator: () => Exporter;
@@ -9,6 +10,7 @@ export interface Template {
 
 const templates: Template[] = [
     {
+        id: 1,
         name: 'A5縦/縦書き2段',
         type: 'Word',
         generator: () => {
@@ -16,6 +18,7 @@ const templates: Template[] = [
         }
     },
     {
+        id: 2,
         name: 'A5横/縦書き1段',
         type: 'Word',
         generator: () => {

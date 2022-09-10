@@ -1,10 +1,11 @@
 <script lang="ts">
+    import Select from 'svelte-select';
     import {exportFile} from "../exporter/exporter";
     import type {ConcatMessage} from "../model/exportMessage";
     import {exportMessageStore} from "../model/exportMessage";
     import templates from "../exporter/templates";
 
-    let selectTemplate = 0;
+    let selectTemplate = templates[0];
 
     const downloadURL = (data, fileName) => {
         const a = document.createElement("a");
@@ -16,7 +17,7 @@
     };
 
     async function convert() {
-        const result = await exportFile($exportMessageStore as ConcatMessage[], templates[selectTemplate]);
+        const result = await exportFile($exportMessageStore as ConcatMessage[], selectTemplate);
 
         const url = URL.createObjectURL(result.file);
         downloadURL(url, result.file.name);
@@ -24,13 +25,21 @@
             URL.revokeObjectURL(url);
         }, 1000);
     }
-</script>
 
-<select bind:value={selectTemplate}>
-    {#each templates as template, i}
-        <option value={i}>
-            {template.name}
-        </option>
-    {/each}
-</select>
+    function handleSelect(e: CustomEvent) {
+        selectTemplate = e.detail
+    }
+</script>
+<p></p>
+<dl>
+    <dt>出力テンプレート</dt>
+    <dd>
+        <div style="width: fit-content; min-width: 18em;">
+            <Select items={templates} labelIdentifier="name" optionIdentifier="id" value={selectTemplate}
+                    listAutoWidth={true} on:select={handleSelect}/>
+        </div>
+    </dd>
+    <dt>出力ファイル</dt>
+    <dd>{selectTemplate?.type}</dd>
+</dl>
 <button on:click={convert}>Go!</button>
