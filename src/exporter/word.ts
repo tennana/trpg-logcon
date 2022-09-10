@@ -6,8 +6,14 @@ import Docxtemplater from "docxtemplater";
 export const literalXMLDelimiter = '||';
 
 export default class Word implements Exporter {
+    private _filePath: string;
+
+    public constructor(filePath: string) {
+        this._filePath = filePath;
+    }
+
     async transform(messages: ConcatMessage[]): Promise<ExportResult> {
-        const templateDoc: ArrayBuffer = await fetch("/template/A5-001-1-cn.docx").then(res => res.arrayBuffer());
+        const templateDoc: ArrayBuffer = await fetch(`/template/${this._filePath}`).then(res => res.arrayBuffer());
         const zip = new PizZip(templateDoc);
         const doc = new Docxtemplater(zip, {
             paragraphLoop: true,
