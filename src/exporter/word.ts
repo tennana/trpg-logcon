@@ -44,6 +44,75 @@ export default class Word implements Exporter {
         }).join("");
     }
 
+    createTableRow(message: ConcatMessage) {
+        let decoration = message.speakerSetting?.paragraph;
+        const colorTag = decoration?.color ? `<w:color w:val="${decoration.color}"/>` : '';
+        let contentXml = message.content.split("\n").map(function (paragraph) {
+            return `<w:r><w:rPr>${colorTag}</w:rPr><w:t>${paragraph}</w:t></w:r>`
+        }).join(this.LINE_SEPARATOR)
+        return `<w:tr>
+        <w:trPr>
+        </w:trPr>
+        <w:tc>
+          <w:tcPr>
+            <w:tcBorders>
+            </w:tcBorders>
+            <w:textDirection w:val="tbRl"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:rPr>
+              </w:rPr>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                ${colorTag}
+              </w:rPr>
+              <w:t>${message.name}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcBorders>
+            </w:tcBorders>
+            <w:textDirection w:val="tbRl"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:rPr>
+              </w:rPr>
+            </w:pPr>
+            ${contentXml}
+            ${this.LINE_SEPARATOR.repeat(decoration.lineBreakNum || 0)}
+          </w:p>
+        </w:tc>
+      </w:tr>`
+    }
+
+    createTable(messages: ConcatMessage[]): string {
+        return `
+    <w:tbl>
+      <w:tblPr>
+        <w:tblW w:w="5000" w:type="pct"/>
+        <w:jc w:val="left"/>
+        <w:tblInd w:w="0" w:type="dxa"/>
+        <w:tblLayout w:type="fixed"/>
+        <w:tblCellMar>
+          <w:top w:w="0" w:type="dxa"/>
+          <w:left w:w="0" w:type="dxa"/>
+          <w:bottom w:w="0" w:type="dxa"/>
+          <w:right w:w="0" w:type="dxa"/>
+        </w:tblCellMar>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="20"/>
+        <w:gridCol w:w="180"/>
+      </w:tblGrid>
+      ${messages.map(this.createTableRow.bind(this)).join("")}
+    </w:tbl>`;
+    }
+
     async transform(messages: ConcatMessage[]): Promise<ExportResult> {
         const templateDoc: ArrayBuffer = await fetch(`/template/${this._filePath}`).then(res => res.arrayBuffer());
         const zip = new PizZip(templateDoc);
@@ -53,6 +122,7 @@ export default class Word implements Exporter {
         });
         doc.render({
             screenplay: this.createScreenplay.bind(this, messages),
+            table: this.createTable.bind(this, messages),
             messages: messages
         })
         const buf = doc.getZip().generate({
