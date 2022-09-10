@@ -5,6 +5,7 @@
     import {sayStore} from "./model/say";
     import Message from "./lib/Message.svelte";
     import Output from "./lib/Output.svelte";
+    import Speaker from "./lib/Speaker.svelte";
 
     let files: File[];
     let loaded = false;
@@ -31,22 +32,7 @@
 
     {#if loaded}
         <Panel name="発言者一覧">
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>表示名</th>
-                </tr>
-                </thead>
-                <tbody>
-                {#each $speakerStore as speaker}
-                    <tr>
-                        <td>{speaker.identity}</td>
-                        <td><input type="text" bind:value={speaker.name}></td>
-                    </tr>
-                {/each}
-                </tbody>
-            </table>
+            <Speaker/>
         </Panel>
         <Panel name="発言確認">
             <div class="normal">
