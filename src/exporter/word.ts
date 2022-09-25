@@ -1,7 +1,8 @@
-import type {Exporter, ExportResult} from "./exporter";
-import type {ConcatMessage} from "../model/exportMessage";
-import PizZip from "pizzip";
+import * as zip from "@zip.js/zip.js";
 import Docxtemplater from "docxtemplater";
+import PizZip from "pizzip";
+import type {ConcatMessage} from "../model/exportMessage";
+import type {Exporter, ExportResult} from "./exporter";
 
 export const literalXMLDelimiter = '||';
 
@@ -115,8 +116,8 @@ export default class Word implements Exporter {
 
     async transform(messages: ConcatMessage[]): Promise<ExportResult> {
         const templateDoc: ArrayBuffer = await fetch(`/template/${this._filePath}`).then(res => res.arrayBuffer());
-        const zip = new PizZip(templateDoc);
-        const doc = new Docxtemplater(zip, {
+        const baseZip = new PizZip(templateDoc);
+        const doc = new Docxtemplater(baseZip, {
             paragraphLoop: true,
             linebreaks: true,
         });
@@ -126,11 +127,25 @@ export default class Word implements Exporter {
             messages: messages
         })
         const buf = doc.getZip().generate({
-            type: "blob",
-            compression: "DEFLATE",
+            type: "uint8array",
+            compression: "STORE"
         });
+        const oldZip = new zip.ZipReader(new zip.Uint8ArrayReader(buf));
+        const newZip = new zip.ZipWriter(new zip.BlobWriter(), {
+            msDosCompatible: true,
+            zipCrypto: false
+        });
+        for await(let entry of oldZip.getEntriesGenerator()) {
+            const content = await entry.getData(new zip.BlobWriter());
+            if (!entry.directory)
+                await newZip.add(entry.filename, new zip.BlobReader(content), {directory: entry.directory});
+        }
+        const [file] = await Promise.all([
+            newZip.close(),
+            oldZip.close(),
+        ]);
         return {
-            file: new File([buf], "output.docx", {lastModified: new Date().getDate()}),
+            file: new File([file], "output.docx", {lastModified: new Date().getDate()}),
             mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         };
     }

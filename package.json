@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.0.2",
+    "@zip.js/zip.js": "^2.6.32",
     "docxtemplater": "^3.31.3",
     "papaparse": "^5.3.2",
     "pizzip": "^3.1.1",
