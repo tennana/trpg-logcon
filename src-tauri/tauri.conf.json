@@ -44,6 +44,13 @@
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
+        "wix": {
+          "language": {
+            "jp-JP": {
+              "localePath": "./wix/jp-JP.xml"
+            }
+          }
+        },
         "timestampUrl": ""
       }
     },
