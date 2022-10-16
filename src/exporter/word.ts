@@ -58,10 +58,12 @@ export default class Word implements Exporter {
           <w:tcPr>
             <w:tcBorders>
             </w:tcBorders>
+            <w:tcW w:w="30" w:type="pct"/>
             <w:textDirection w:val="tbRl"/>
           </w:tcPr>
           <w:p>
             <w:pPr>
+              <w:widowControl w:val="false"/>
               <w:rPr>
               </w:rPr>
             </w:pPr>
@@ -75,12 +77,14 @@ export default class Word implements Exporter {
         </w:tc>
         <w:tc>
           <w:tcPr>
+            <w:tcW w:w="70" w:type="pct"/>
             <w:tcBorders>
             </w:tcBorders>
             <w:textDirection w:val="tbRl"/>
           </w:tcPr>
           <w:p>
             <w:pPr>
+              <w:widowControl w:val="false"/>
               <w:rPr>
               </w:rPr>
             </w:pPr>
@@ -95,7 +99,7 @@ export default class Word implements Exporter {
         return `
     <w:tbl>
       <w:tblPr>
-        <w:tblW w:w="5000" w:type="pct"/>
+        <w:tblW w:w="5000" w:type="dxa"/>
         <w:jc w:val="left"/>
         <w:tblInd w:w="0" w:type="dxa"/>
         <w:tblLayout w:type="fixed"/>
@@ -107,8 +111,8 @@ export default class Word implements Exporter {
         </w:tblCellMar>
       </w:tblPr>
       <w:tblGrid>
-        <w:gridCol w:w="20"/>
-        <w:gridCol w:w="180"/>
+        <w:gridCol w:w="610"/>
+        <w:gridCol w:w="5500"/>
       </w:tblGrid>
       ${messages.map(this.createTableRow.bind(this)).join("")}
     </w:tbl>`;
