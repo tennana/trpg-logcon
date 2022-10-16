@@ -3,7 +3,8 @@
     <button
             class="header"
             on:click={() => {
-			group = group === name ? '' : name;
+			dispatcher("select", group === key ? '' : key);
+			group = group === key ? '' : key;
 		}}
     >
         <span>{name}</span>
@@ -22,11 +23,15 @@
 </div>
 
 <script>
-    import { slide } from 'svelte/transition';
+	import {createEventDispatcher} from "svelte";
+	import {slide} from 'svelte/transition';
 
-    export let name = '';
-    export let group = 'Item 1';
-    $: active = group === name;
+	let dispatcher = createEventDispatcher();
+
+	export let name = '';
+	export let group = 0;
+	export let key = new Date().getMilliseconds();
+	$: active = group === key;
 </script>
 
 <style>

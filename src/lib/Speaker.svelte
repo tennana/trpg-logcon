@@ -1,7 +1,9 @@
 <script lang="ts">
-    import {speakerStore} from "../model/speaker";
     import {HsvPicker} from 'svelte-color-picker';
+    import {speakerStore} from "../model/speaker";
     import Panel from "./panel.svelte"
+
+    let selectColorGroup = '';
 
     function RGBAToHex(rgba) {
         const {r, g, b} = rgba;
@@ -34,7 +36,8 @@
             <td>{speaker.identity}</td>
             <td><input type="text" bind:value={speaker.name} style="color: {speaker.paragraph.color}"></td>
             <td>
-                <Panel name="設定変更">
+                <Panel name="設定変更" group={selectColorGroup} key={speaker.identity}
+                       on:select={(e)=> selectColorGroup = e.detail}>
                     <HsvPicker on:colorChange={(rgba) => {speaker.paragraph.color = RGBAToHex(rgba.detail)}}
                                startColor="{speaker.paragraph.color || '#000000'}"/>
                 </Panel>
