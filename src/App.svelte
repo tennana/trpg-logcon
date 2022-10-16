@@ -1,11 +1,12 @@
 <script lang="ts">
-    import {speakerStore} from "./model/speaker";
     import converter from "./converter/converter";
-    import Panel from "./lib/panel.svelte"
-    import {sayStore} from "./model/say";
+    import CharacterDecoration from "./lib/CharacterDecoration.svelte";
     import Message from "./lib/Message.svelte";
     import Output from "./lib/Output.svelte";
+    import Panel from "./lib/panel.svelte"
     import Speaker from "./lib/Speaker.svelte";
+    import {sayStore} from "./model/say";
+    import {speakerStore} from "./model/speaker";
 
     let files: File[];
     let loaded = false;
@@ -34,11 +35,14 @@
         <Panel name="発言者一覧">
             <Speaker/>
         </Panel>
+        <Panel name="装飾設定">
+            <CharacterDecoration/>
+        </Panel>
         <Panel name="発言確認">
             <div class="normal">
-            {#each $sayStore as message}
-                <Message say="{message}"/>
-            {/each}
+                {#each $sayStore as message}
+                    <Message say="{message}"/>
+                {/each}
             </div>
         </Panel>
         <Panel name="出力">
