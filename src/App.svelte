@@ -27,7 +27,8 @@
         </li>
     </ol>
     {#if !loaded}
-        <Panel name="1.ログファイルの準備">
+        <Panel name="ログファイルの準備">
+            <h2>Discord</h2>
             <h3>Discord Chat Exporterを使う</h3>
             <ol>
                 <li>ダウンロードして利用する形式のDiscord非公式ツールです。基本的な使い方は、<a
@@ -45,11 +46,14 @@
                 <li>Step 1 で日付を入力してSearchします。日付なしでは選べないようです。</li>
                 <li>Export FormatをCSVに変更して、Exportします。</li>
             </ol>
+            <h2>ココフォリア</h2>
+            ココフォリアv1.22.5が出力するものと同じ形式のHTMLファイルを読み込むことができます。タブ情報は区別しません。
         </Panel>
     {/if}
 
     <input type="file" bind:files
-           accept="text/csv">
+           accept="text/csv"
+           style="margin-top: 2rem">
 
     {#if loaded}
         <Panel name="発言者一覧">

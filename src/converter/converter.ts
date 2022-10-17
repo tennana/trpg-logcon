@@ -1,3 +1,4 @@
+import {CcfoliaV122Html} from "./ccfolia122";
 import {DiscordChatExporterCsv} from "./discordChatExporterCsv";
 import {DiscordMateCsv} from "./discordMateCsv";
 
@@ -9,7 +10,8 @@ export interface InputConverter {
 
 const CONVERTERS = [
     new DiscordChatExporterCsv(),
-    new DiscordMateCsv()
+    new DiscordMateCsv(),
+    new CcfoliaV122Html()
 ];
 
 export default async function (file: File) {
@@ -17,7 +19,7 @@ export default async function (file: File) {
         const parser = await Promise.any(CONVERTERS.map(converter => converter.canParse(file)));
         parser.parse(file);
     } catch (e) {
-        console.log(e);
         alert("対応していないファイル形式か、エラーで読み取れませんでした");
+        throw e;
     }
 }

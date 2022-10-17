@@ -7,10 +7,10 @@ export interface ParagraphStyle {
     lineBreakNum: number;
 }
 
-function createInitParagraph(): ParagraphStyle {
+export function createInitParagraph(color: string = '', lineBreakNum: number = 0): ParagraphStyle {
     return {
-        color: '',
-        lineBreakNum: 0
+        color,
+        lineBreakNum
     }
 }
 
@@ -23,7 +23,9 @@ export interface Speaker {
 function addSpeaker(speaker: Speaker) {
     update(function (state) {
         if (state.findIndex((s) => s.identity === speaker.identity) === -1) {
-            speaker.paragraph = createInitParagraph();
+            if (!speaker.paragraph) {
+                speaker.paragraph = createInitParagraph();
+            }
             state.push(speaker);
         }
         return state;
@@ -34,5 +36,7 @@ export const speakerStore = {
     subscribe: subscribe,
     addSpeaker,
     set,
-    clear: function () {set([])}
+    clear: function () {
+        set([])
+    }
 }
