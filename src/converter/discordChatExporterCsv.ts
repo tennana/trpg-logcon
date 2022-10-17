@@ -3,13 +3,13 @@ import {sayStore} from "../model/say";
 import {speakerStore} from "../model/speaker";
 import type {InputConverter} from "./converter";
 
-export class DiscordMateCsv implements InputConverter {
+export class DiscordChatExporterCsv implements InputConverter {
     async canParse(input: File): Promise<InputConverter> {
         if (input.type !== "text/csv") {
             return Promise.reject();
         }
         return input.text().then(text => {
-            if (text.startsWith("Date,Username,User tag,Content,Mentions,link")) {
+            if (text.startsWith("AuthorID,Author,Date,Content,Attachments,Reactions")) {
                 return this;
             }
             return Promise.reject();
@@ -24,13 +24,13 @@ export class DiscordMateCsv implements InputConverter {
 
     step(results, _parser: Parser) {
         const data = results.data;
-        if (!data["Username"]) {
+        if (!data["AuthorID"]) {
             return;
         }
-        let speakerIdentity = data["Username"] + data["User tag"];
+        let speakerIdentity = data["AuthorID"];
         speakerStore.addSpeaker({
             identity: speakerIdentity,
-            name: data["Username"]
+            name: data["Author"]
         })
         sayStore.addMessage({
             identity: data["Date"] + speakerIdentity,
