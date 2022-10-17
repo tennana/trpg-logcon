@@ -9,6 +9,10 @@ export interface Decoration {
     removal: boolean;
 }
 
+export interface ValidDecoration extends Decoration {
+    match: RegExp;
+}
+
 export function createEmptyDecoration(): Decoration {
     return {
         startChar: "",
@@ -20,6 +24,12 @@ export function createEmptyDecoration(): Decoration {
         removal: false,
         strikethrough: false
     };
+}
+
+export function isValidDecoration(decoration: Decoration): boolean {
+    return decoration.startChar && decoration.endChar &&
+        !decoration.startChar.includes(decoration.endChar) &&
+        !decoration.endChar.includes(decoration.startChar);
 }
 
 import {writable} from 'svelte/store';

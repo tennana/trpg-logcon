@@ -1,9 +1,11 @@
 <script lang="ts">
     import Select from 'svelte-select';
     import {exportFile} from "../exporter/exporter";
+    import templates from "../exporter/templates";
+    import type {Decoration} from "../model/decoration";
+    import {decorationStore} from "../model/decoration";
     import type {ConcatMessage} from "../model/exportMessage";
     import {exportMessageStore} from "../model/exportMessage";
-    import templates from "../exporter/templates";
 
     let selectTemplate = templates[0];
 
@@ -17,7 +19,7 @@
     };
 
     async function convert() {
-        const result = await exportFile($exportMessageStore as ConcatMessage[], selectTemplate);
+        const result = await exportFile($exportMessageStore as ConcatMessage[], $decorationStore as Decoration[], selectTemplate);
 
         const url = URL.createObjectURL(result.file);
         downloadURL(url, result.file.name);

@@ -5,7 +5,7 @@
     import FaRegCheckCircle from 'svelte-icons/fa/FaRegCheckCircle.svelte'
     import FaTrashAlt from 'svelte-icons/fa/FaTrashAlt.svelte'
     import type {Decoration} from "../model/decoration";
-    import {createEmptyDecoration} from "../model/decoration";
+    import {createEmptyDecoration, isValidDecoration} from "../model/decoration";
     import Panel from "./panel.svelte"
 
     let dispatcher = createEventDispatcher();
@@ -46,9 +46,7 @@
     export let decoration: Decoration = createEmptyDecoration();
 
     let valid = false;
-    $: valid = decoration.startChar && decoration.endChar &&
-        !decoration.startChar.includes(decoration.endChar) &&
-        !decoration.endChar.includes(decoration.startChar);
+    $: valid = isValidDecoration(decoration);
 </script>
 
 <tr>

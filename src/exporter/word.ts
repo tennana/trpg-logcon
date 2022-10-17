@@ -1,6 +1,7 @@
 import * as zip from "@zip.js/zip.js";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
+import type {ValidDecoration} from "../model/decoration";
 import type {ConcatMessage} from "../model/exportMessage";
 import type {Exporter, ExportResult} from "./exporter";
 
@@ -15,13 +16,11 @@ export default class Word implements Exporter {
 
     private readonly LINE_SEPARATOR = `<w:r><w:rPr/><w:br/></w:r>`;
 
-    createScreenplay(messages: ConcatMessage[], _scope: any): string {
+    createScreenplay(messages: ConcatMessage[], decorations: ValidDecoration[], _scope: any): string {
         return messages.map((message) => {
             let decoration = message.speakerSetting?.paragraph;
             const colorTag = decoration?.color ? `<w:color w:val="${decoration.color}"/>` : '';
-            let contentXml = message.content.split("\n").map(function (paragraph) {
-                return `<w:r><w:rPr>${colorTag}</w:rPr><w:t>${paragraph}</w:t></w:r>`
-            }).join(this.LINE_SEPARATOR)
+            let contentXml = message.content.split("\n").map(this.createParagraph.bind(this, colorTag, decorations)).join(this.LINE_SEPARATOR)
             return `<w:p>
       <w:pPr>
         <w:pStyle w:val="Normal"/>
@@ -45,12 +44,39 @@ export default class Word implements Exporter {
         }).join("");
     }
 
-    createTableRow(message: ConcatMessage) {
+    createParagraph(colorTag: string, decorations: ValidDecoration[], paragraph: string) {
+        const normalrPr = `<w:rPr>${colorTag}</w:rPr>`;
+        let paragraphXml = paragraph;
+        decorations.forEach(decoration => {
+            paragraphXml = paragraphXml.replace(decoration.match, (word) => {
+                let rPr = "";
+                if (decoration.removal) {
+                    word = word.replace(decoration.startChar, "").replace(decoration.endChar, "");
+                }
+                if (decoration.bold) {
+                    rPr += "<w:b w:val=\"true\"/>";
+                }
+                if (decoration.colorEnabled) {
+                    rPr += `<w:color w:val="${decoration.color}"/>`
+                } else {
+                    rPr += colorTag;
+                }
+                if (decoration.strikethrough) {
+                    rPr += "<w:strike w:val=\"true\"/>";
+                }
+                if (decoration.italics) {
+                    rPr += "<w:i />";
+                }
+                return `</w:t></w:r><w:r><w:rPr>${rPr}</w:rPr><w:t>${word}</w:t></w:r><w:r>${normalrPr}<w:t>`;
+            });
+        });
+        return `<w:r>${normalrPr}<w:t>${paragraphXml}</w:t></w:r>`;
+    }
+
+    createTableRow(decorations: ValidDecoration[], message: ConcatMessage) {
         let decoration = message.speakerSetting?.paragraph;
         const colorTag = decoration?.color ? `<w:color w:val="${decoration.color}"/>` : '';
-        let contentXml = message.content.split("\n").map(function (paragraph) {
-            return `<w:r><w:rPr>${colorTag}</w:rPr><w:t>${paragraph}</w:t></w:r>`
-        }).join(this.LINE_SEPARATOR)
+        let contentXml = message.content.split("\n").map(this.createParagraph.bind(this, colorTag, decorations)).join(this.LINE_SEPARATOR)
         return `<w:tr>
         <w:trPr>
         </w:trPr>
@@ -95,7 +121,7 @@ export default class Word implements Exporter {
       </w:tr>`
     }
 
-    createTable(messages: ConcatMessage[]): string {
+    createTable(messages: ConcatMessage[], decoration: ValidDecoration[]): string {
         return `
     <w:tbl>
       <w:tblPr>
@@ -114,11 +140,11 @@ export default class Word implements Exporter {
         <w:gridCol w:w="610"/>
         <w:gridCol w:w="5500"/>
       </w:tblGrid>
-      ${messages.map(this.createTableRow.bind(this)).join("")}
+      ${messages.map(this.createTableRow.bind(this, decoration)).join("")}
     </w:tbl>`;
     }
 
-    async transform(messages: ConcatMessage[]): Promise<ExportResult> {
+    async transform(messages: ConcatMessage[], filteredDecorations: ValidDecoration[]): Promise<ExportResult> {
         const templateDoc: ArrayBuffer = await fetch(`/template/${this._filePath}`).then(res => res.arrayBuffer());
         const baseZip = new PizZip(templateDoc);
         const doc = new Docxtemplater(baseZip, {
@@ -126,8 +152,8 @@ export default class Word implements Exporter {
             linebreaks: true,
         });
         doc.render({
-            screenplay: this.createScreenplay.bind(this, messages),
-            table: this.createTable.bind(this, messages),
+            screenplay: this.createScreenplay.bind(this, messages, filteredDecorations),
+            table: this.createTable.bind(this, messages, filteredDecorations),
             messages: messages
         })
         const buf = doc.getZip().generate({
