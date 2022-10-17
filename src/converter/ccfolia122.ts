@@ -26,6 +26,7 @@ export class CcfoliaV122Html implements InputConverter {
 
     parse(file: File) {
         let previous = "";
+        let hashCode = 0;
         const regexp = this.rowRegexp;
         const reader = (file.stream() as unknown as ReadableStream).getReader();
         let textDecoder = new TextDecoder();
@@ -33,7 +34,7 @@ export class CcfoliaV122Html implements InputConverter {
             previous += textDecoder.decode(value);
             let result;
             while (result = regexp.exec(previous)) {
-                this.step(result);
+                hashCode = this.step(result, hashCode);
             }
             if (done) {
                 return;
@@ -42,7 +43,7 @@ export class CcfoliaV122Html implements InputConverter {
         }.bind(this));
     }
 
-    step(result: RegExpExecArray) {
+    step(result: RegExpExecArray, previousHashCode: number) {
         const data = {
             color: result[1],
             channel: result[2],
@@ -55,15 +56,17 @@ export class CcfoliaV122Html implements InputConverter {
             name: data.name,
             paragraph: createInitParagraph(data.color)
         })
+        let hashCode = Array.from(data.name + data.content)
+            .reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0);
         sayStore.addMessage({
-            identity: "" + Array.from(data.content)
-                .reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
+            identity: previousHashCode + "-" + hashCode,
             speaker: speakerIdentity,
             content: data.content
                 .replaceAll("<br>", "\n")
                 .replaceAll("&gt;", ">")
                 .replaceAll("&lt;", "<")
         })
+        return hashCode;
     }
 }
 

@@ -33,7 +33,8 @@ export class DiscordChatExporterCsv implements InputConverter {
             name: data["Author"]
         })
         sayStore.addMessage({
-            identity: data["Date"] + speakerIdentity,
+            identity: "" + Array.from(data["Date"] + data["Content"] as string)
+                .reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
             speaker: speakerIdentity,
             content: data["Content"]
         })

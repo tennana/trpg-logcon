@@ -34,7 +34,6 @@
                 <li>ダウンロードして利用する形式のDiscord非公式ツールです。基本的な使い方は、<a
                         href="https://note.com/as_hr/n/n1dfec743eedf">明日原様のnote</a>や検索で確認して下さい。
                 </li>
-                <li>歯車マークからDateFormatを「dd-MMM-yy hh:mm:ss tt」にするなどして、秒数まで含まれるようにしてください。</li>
                 <li>チャンネル選択後、右下のボタンを押して出てきたウィンドウで、FormatをCSVに変更して、Exportします。</li>
             </ol>
             <h3>DiscordMateを使う</h3>
@@ -43,7 +42,7 @@
                         href="https://chrome.google.com/webstore/detail/discord/ofjlibelpafmdhigfgggickpejfomamk ">DiscordMate</a>」をインストールします。
                 </li>
                 <li>"Web版の"Discordで出力したいチャンネルを開き、アドレスバー右のDiscordMateのアイコンをクリックします。いない場合はハンマーのようなアイコンの中にあります</li>
-                <li>Step 1 で日付を入力してSearchします。日付なしでは選べないようです。</li>
+                <li>Step 1 で開始日時と終了日時を入力してSearchします。500発言以上は出力に失敗することがあります。</li>
                 <li>Export FormatをCSVに変更して、Exportします。</li>
             </ol>
             <h2>ココフォリア</h2>
