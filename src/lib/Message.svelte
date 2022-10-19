@@ -3,10 +3,9 @@
     import type {Speaker} from "../model/speaker";
     import {speakerStore} from "../model/speaker";
 
-    let speakerName;
-    $: speakerName = say.overrideName ? say.overrideName : ($speakerStore as Speaker[]).find(speaker => speaker.identity === say.speaker).name;
-
     export let say: Message;
+    $: speaker = ($speakerStore as Speaker[]).find(speaker => speaker.identity === say.speaker);
+    $: speakerName = say?.overrideName ? say?.overrideName : speaker?.name;
 </script>
     <div class="name">
         {speakerName}

@@ -51,7 +51,7 @@
     {/if}
 
     <input type="file" bind:files
-           accept="text/csv"
+           accept="text/csv,text/html"
            style="margin-top: 2rem">
 
     {#if loaded}
