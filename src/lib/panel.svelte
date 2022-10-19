@@ -57,7 +57,7 @@
     .open > .header {
         position: sticky;
         top: 0;
-        background: white;
+        background-color: var(--panelBackground, transparent)
     }
     span {
         flex: 1;
