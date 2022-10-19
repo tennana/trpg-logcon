@@ -10,15 +10,18 @@ export interface ExportResult {
 
 export interface Exporter {
     transform(messages: ConcatMessage[], decoration: ValidDecoration[]): Promise<ExportResult>;
+
+    createDecorationRegExp(decoration: Decoration): RegExp;
 }
 
 export function exportFile(messages: ConcatMessage[], decoration: Decoration[], template: Template) {
-    return template.generator().transform(messages, decoration.filter(decoration => {
+    const exporter = template.generator();
+    return exporter.transform(messages, decoration.filter(decoration => {
         return isValidDecoration(decoration);
     }).map(decoration => {
         return {
             ...decoration,
-            match: new RegExp(decoration.startChar + ".+?" + decoration.endChar, "g")
+            match: exporter.createDecorationRegExp(decoration)
         }
     }));
 }

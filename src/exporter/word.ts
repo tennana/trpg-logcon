@@ -2,7 +2,7 @@ import * as zip from "@zip.js/zip.js";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import xmlescape from "xml-escape";
-import type {ValidDecoration} from "../model/decoration";
+import type {Decoration, ValidDecoration} from "../model/decoration";
 import type {ConcatMessage} from "../model/exportMessage";
 import type {Exporter, ExportResult} from "./exporter";
 
@@ -10,12 +10,11 @@ export const literalXMLDelimiter = '||';
 
 export default class Word implements Exporter {
     private _filePath: string;
+    private readonly LINE_SEPARATOR = `<w:r><w:rPr/><w:br/></w:r>`;
 
     public constructor(filePath: string) {
         this._filePath = filePath;
     }
-
-    private readonly LINE_SEPARATOR = `<w:r><w:rPr/><w:br/></w:r>`;
 
     createScreenplay(messages: ConcatMessage[], decorations: ValidDecoration[], _scope: any): string {
         return messages.map((message) => {
@@ -47,7 +46,7 @@ export default class Word implements Exporter {
 
     createParagraph(colorTag: string, decorations: ValidDecoration[], paragraph: string) {
         const normalrPr = `<w:rPr>${colorTag}</w:rPr>`;
-        let paragraphXml = paragraph;
+        let paragraphXml = xmlescape(paragraph);
         decorations.forEach(decoration => {
             paragraphXml = paragraphXml.replace(decoration.match, (word) => {
                 let rPr = "";
@@ -68,12 +67,9 @@ export default class Word implements Exporter {
                 if (decoration.italics) {
                     rPr += "<w:i />";
                 }
-                return `</w:t></w:r><w:r><w:rPr>${rPr}</w:rPr><w:t>${xmlescape(word)}</w:t></w:r><w:r>${normalrPr}<w:t>`;
+                return `</w:t></w:r><w:r><w:rPr>${rPr}</w:rPr><w:t>${word}</w:t></w:r><w:r>${normalrPr}<w:t>`;
             });
         });
-        if (decorations.length == 0) {
-            paragraphXml = xmlescape(paragraphXml);
-        }
         return `<w:r>${normalrPr}<w:t>${paragraphXml}</w:t></w:r>`;
     }
 
@@ -183,4 +179,17 @@ export default class Word implements Exporter {
             mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         };
     }
+
+    createDecorationRegExp(decoration: Decoration): RegExp {
+        return new RegExp(escapeRegExp(xmlescape(decoration.startChar)) + ".+?" + escapeRegExp(xmlescape(decoration.endChar)), "g")
+    }
+}
+
+const reRegExp = /[\\^$.*+?()[\]{}|]/g,
+    reHasRegExp = new RegExp(reRegExp.source);
+
+function escapeRegExp(string) {
+    return (string && reHasRegExp.test(string))
+        ? string.replace(reRegExp, '\\$&')
+        : string;
 }
