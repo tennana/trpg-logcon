@@ -1,6 +1,7 @@
 import * as zip from "@zip.js/zip.js";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
+import xmlescape from "xml-escape";
 import type {ValidDecoration} from "../model/decoration";
 import type {ConcatMessage} from "../model/exportMessage";
 import type {Exporter, ExportResult} from "./exporter";
@@ -67,9 +68,12 @@ export default class Word implements Exporter {
                 if (decoration.italics) {
                     rPr += "<w:i />";
                 }
-                return `</w:t></w:r><w:r><w:rPr>${rPr}</w:rPr><w:t>${word}</w:t></w:r><w:r>${normalrPr}<w:t>`;
+                return `</w:t></w:r><w:r><w:rPr>${rPr}</w:rPr><w:t>${xmlescape(word)}</w:t></w:r><w:r>${normalrPr}<w:t>`;
             });
         });
+        if (decorations.length == 0) {
+            paragraphXml = xmlescape(paragraphXml);
+        }
         return `<w:r>${normalrPr}<w:t>${paragraphXml}</w:t></w:r>`;
     }
 
