@@ -19,7 +19,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16
-        cache: 'yarn'
+        cache: 'npm'
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
@@ -54,7 +54,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'yarn'
+          cache: 'npm'
       - name: install app dependencies and build it
         run: yarn && yarn build --base=/trpg-logcone/
       - uses: actions/upload-pages-artifact@v1
