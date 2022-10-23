@@ -50,7 +50,7 @@ Tennana
 
 - https://www.tennana.net/
 - https://github.com/tennana
-- https://twitter.com/tennana
+- https://twitter.com/tennana_tef
 
 ## 出力テンプレート
 ### Word-A5テンプレート
