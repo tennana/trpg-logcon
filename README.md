@@ -30,8 +30,16 @@
 あなたが出力したどのファイルでも発生する場合は、同じく[Github Issues](https://github.com/tennana/trpg-logcone/issues)に投稿してください。
 特定のセッションのログのみで発生する場合は、制作者連絡先に連絡頂くとスムーズに解決するかもしれません。
 
-## 開発向け情報
-[誰かに訊かれたら書きます](http://scp-jp.wikidot.com/scp-j)。
+## 支援したい
+本ソフトウェアはIssuesとプルリクエストを受け付けているため、Issuesを作ったりその解決にご協力頂くことができます。
+金銭的な支援の受付先は[Github](https://github.com/tennana/trpg-logcone)上に掲示しています。
+
+### 開発向け情報
+- Tauri 1.1.1
+- SvelteKit
+- Typescript
+
+開発サーバーの起動方法等は、[誰かに訊かれたら書きます](http://scp-jp.wikidot.com/scp-j)。
 
 # Credit
 ## スポンサー
