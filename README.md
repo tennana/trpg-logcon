@@ -36,7 +36,7 @@
 
 ### 開発向け情報
 - Tauri 1.1.1
-- SvelteKit
+- Svelte
 - Typescript
 
 開発サーバーの起動方法等は、[誰かに訊かれたら書きます](http://scp-jp.wikidot.com/scp-j)。
