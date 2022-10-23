@@ -2,6 +2,7 @@
     import converter from "./converter/converter";
     import CharacterDecoration from "./lib/CharacterDecoration.svelte";
     import Message from "./lib/Message.svelte";
+    import Modal from "./lib/Modal.svelte";
     import Output from "./lib/Output.svelte";
     import Panel from "./lib/panel.svelte"
     import Speaker from "./lib/Speaker.svelte";
@@ -16,6 +17,17 @@
         loaded = true;
     }
 
+    let showReadme = false;
+    let manualHtml = "";
+
+    async function openReadme() {
+        if(!manualHtml) {
+            await fetch("./readme.html").then((r) => r.text()).then((html) => {
+                manualHtml = html;
+            })
+        }
+        showReadme = true;
+    }
 </script>
 
 <main class="container">
@@ -74,9 +86,15 @@
     {/if}
 </main>
 <footer>
-    <span><a href="./readme.html" target="_black">README & LICENSE</a></span><br/>
+    <span><a href="javascript:void(0)" on:click={openReadme}>README & LICENSE</a></span><br/>
     <span>logcone {__APP_VERSION__}</span>
 </footer>
+
+{#if showReadme}
+<Modal on:close="{() => showReadme = false}">
+    {@html manualHtml}
+</Modal>
+{/if}
 
 <style>
     .normal {
