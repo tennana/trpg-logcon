@@ -42,11 +42,9 @@
         "digestAlgorithm": "sha256",
 	"allowDowngrades": true,
         "wix": {
-          "language": {
-            "jp-JP": {
-              "localePath": "./wix/jp-JP.xml"
-            }
-          }
+          "language": [
+            "jp-JP"
+          ]
         },
         "webviewInstallMode": {
           "type": "embedBootstrapper"
