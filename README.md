@@ -13,6 +13,8 @@
 ## 開発者の方へ
 [LICENSE](https://github.com/tennana/trpg-logcon/blob/master/LICENSE)の通り、本ソフトウェアはAGPL-3.0ライセンス( [日本語訳](https://licenses.opensource.jp/AGPL-3.0/AGPL-3.0.html) )です。本ソフトウェアを改造するなどしてWeb上に公開する場合、ソースコードを公開する必要があります。
 
+本ソフトウェアのソースコードは[Github](https://github.com/tennana/trpg-logcon)で公開しています。
+
 # こういうときは
 ## イラストを入れられるようにして欲しい
 つくるのが大変なので、出力後のファイルを編集してください。
