@@ -1,4 +1,4 @@
-# ろぐこん(かり)
+# ろぐこね(かり)
 本ツールは、次のチャットログを読み込んでWordファイルのテンプレートへ変換するリプレイ制作支援ツールです。
 
 - Discordログ
@@ -11,9 +11,9 @@
 制作者は本ソフトウェアにいかなる保証も行いません。また本ソフトウェアを実行した結果の影響につきましても、一切責任を負いません。同時に、生成されたファイルに関して制作者はいかなる権利主張も行いません。商業用途、同人活動を含めてご自由にお使い下さい。
 
 ## 開発者の方へ
-[LICENSE](https://github.com/tennana/trpg-logcon/blob/master/LICENSE)の通り、本ソフトウェアはAGPL-3.0ライセンス( [日本語訳](https://licenses.opensource.jp/AGPL-3.0/AGPL-3.0.html) )です。本ソフトウェアを改造するなどしてWeb上に公開する場合、ソースコードを公開する必要があります。
+[LICENSE](https://github.com/tennana/trpg-logcone/blob/master/LICENSE)の通り、本ソフトウェアはAGPL-3.0ライセンス( [日本語訳](https://licenses.opensource.jp/AGPL-3.0/AGPL-3.0.html) )です。本ソフトウェアを改造するなどしてWeb上に公開する場合、ソースコードを公開する必要があります。
 
-本ソフトウェアのソースコードは[Github](https://github.com/tennana/trpg-logcon)で公開しています。
+本ソフトウェアのソースコードは[Github](https://github.com/tennana/trpg-logcone)で公開しています。
 
 # こういうときは
 ## イラストを入れられるようにして欲しい
@@ -23,11 +23,11 @@
 ## 操作がわかりにくい
 ## こんな機能が欲しい
 ## 読み込める・出力できるパターンを増やして欲しい
-[Github Issues](https://github.com/tennana/trpg-logcon/issues) に投稿してください。気が向いたら誰かがそのうちやってくれるかもしれません。
+[Github Issues](https://github.com/tennana/trpg-logcone/issues) に投稿してください。気が向いたら誰かがそのうちやってくれるかもしれません。
 誰かがそのうちでは困る場合は、[有償依頼としてメッセージ頂ければ見積もりします](https://tsunagu.cloud/users/tennana_tef)。
 
 ## 対応ファイルのはずだけど読み込めなかった
-あなたが出力したどのファイルでも発生する場合は、同じく[Github Issues](https://github.com/tennana/trpg-logcon/issues)に投稿してください。
+あなたが出力したどのファイルでも発生する場合は、同じく[Github Issues](https://github.com/tennana/trpg-logcone/issues)に投稿してください。
 特定のセッションのログのみで発生する場合は、制作者連絡先に連絡頂くとスムーズに解決するかもしれません。
 
 ## 開発向け情報

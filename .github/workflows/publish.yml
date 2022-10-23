@@ -56,7 +56,7 @@ jobs:
           node-version: 16
           cache: 'yarn'
       - name: install app dependencies and build it
-        run: yarn && yarn build --base=/trpg-logcon/
+        run: yarn && yarn build --base=/trpg-logcone/
       - uses: actions/upload-pages-artifact@v1
         with:
           path: dist

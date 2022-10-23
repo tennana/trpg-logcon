@@ -25,7 +25,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "net.tennana.trpg.log-con",
+      "identifier": "net.tennana.trpg.logcone",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -65,7 +65,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "ろぐこん(かり)",
+        "title": "ろぐこね(かり)",
         "width": 800,
         "fileDropEnabled": false
       }

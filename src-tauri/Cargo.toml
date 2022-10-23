@@ -1,5 +1,5 @@
 [package]
-name = "log-con"
+name = "trpg-logcone"
 version = "0.0.1"
 description = "TRPGチャットログをWord形式などへ整形します。"
 authors = [ "Tennana" ]
