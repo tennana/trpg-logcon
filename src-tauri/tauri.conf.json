@@ -6,10 +6,6 @@
     "distDir": "../dist",
     "withGlobalTauri": false
   },
-  "package": {
-    "productName": "chat-log-converter",
-    "version": "0.0.0"
-  },
   "tauri": {
     "allowlist": {
       "all": false
@@ -29,7 +25,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "net.tennana.trpg.bookBinding",
+      "identifier": "net.tennana.trpg.log-con",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -44,12 +40,16 @@
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
+	"allowDowngrades": true,
         "wix": {
           "language": {
             "jp-JP": {
               "localePath": "./wix/jp-JP.xml"
             }
           }
+        },
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
         },
         "timestampUrl": ""
       }
@@ -65,7 +65,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "chat-log-converter",
+        "title": "ろぐこん(かり)",
         "width": 800,
         "fileDropEnabled": false
       }
