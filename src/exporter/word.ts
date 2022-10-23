@@ -145,7 +145,7 @@ export default class Word implements Exporter {
     }
 
     async transform(messages: ConcatMessage[], filteredDecorations: ValidDecoration[]): Promise<ExportResult> {
-        const templateDoc: ArrayBuffer = await fetch(`/template/${this._filePath}`).then(res => res.arrayBuffer());
+        const templateDoc: ArrayBuffer = await fetch(`./template/${this._filePath}`).then(res => res.arrayBuffer());
         const baseZip = new PizZip(templateDoc);
         const doc = new Docxtemplater(baseZip, {
             paragraphLoop: true,
