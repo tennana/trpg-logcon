@@ -73,6 +73,10 @@
         </Panel>
     {/if}
 </main>
+<footer>
+    <span><a href="./readme.html" target="_black">README & LICENSE</a></span><br/>
+    <span>logcone {__APP_VERSION__}</span>
+</footer>
 
 <style>
     .normal {

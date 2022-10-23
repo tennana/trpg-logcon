@@ -4,7 +4,9 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [svelte()],
-
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+  },
   // Vite optons tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   // prevent vite from obscuring rust errors
   clearScreen: false,
