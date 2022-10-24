@@ -43,7 +43,7 @@
 
 # Credit
 ## スポンサー
-本ソフトウェアは [@aruihatubame](https://twitter.com/aruihatubame) の依頼によって作成されました。
+本ソフトウェアは [異境萬雑貨店(@jEhiAoemfnNSgZ1)](https://twitter.com/jEhiAoemfnNSgZ1) の依頼によって作成されました。
 
 ## 制作者
 Tennana
