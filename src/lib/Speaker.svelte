@@ -1,25 +1,6 @@
 <script lang="ts">
-    import {HsvPicker} from 'svelte-color-picker';
     import {speakerStore} from "../model/speaker";
-    import Panel from "./panel.svelte"
-
-    let selectColorGroup = '';
-
-    function RGBAToHex(rgba) {
-        const {r, g, b} = rgba;
-        let rHex = r.toString(16);
-        let gHex = g.toString(16);
-        let bHex = b.toString(16);
-
-        if (rHex.length == 1)
-            rHex = "0" + rHex;
-        if (gHex.length == 1)
-            gHex = "0" + gHex;
-        if (bHex.length == 1)
-            bHex = "0" + bHex;
-
-        return ("#" + rHex + gHex + bHex).toUpperCase();
-    }
+    import ColorPanel from "./ColorPanel.svelte"
 </script>
 <table>
     <thead>
@@ -36,11 +17,8 @@
             <td>{speaker.identity}</td>
             <td><input type="text" bind:value={speaker.name} style="color: {speaker.paragraph.color}"></td>
             <td>
-                <Panel name="設定変更" group={selectColorGroup} key={speaker.identity}
-                       on:select={(e)=> selectColorGroup = e.detail}>
-                    <HsvPicker on:colorChange={(rgba) => {speaker.paragraph.color = RGBAToHex(rgba.detail)}}
-                               startColor="{speaker.paragraph.color || '#000000'}"/>
-                </Panel>
+                <ColorPanel on:colorChange={(e) => speaker.paragraph.color = e.detail}
+                            color={speaker.paragraph.color || '#000000'}/>
             </td>
             <td>発言後<input type="number" size="2" min="0" style="width:2em" bind:value={speaker.paragraph.lineBreakNum}>行、改行する
             </td>

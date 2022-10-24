@@ -1,30 +1,13 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
-    import {HsvPicker} from 'svelte-color-picker';
     import FaExclamationTriangle from 'svelte-icons/fa/FaExclamationTriangle.svelte'
     import FaRegCheckCircle from 'svelte-icons/fa/FaRegCheckCircle.svelte'
     import FaTrashAlt from 'svelte-icons/fa/FaTrashAlt.svelte'
     import type {Decoration} from "../model/decoration";
     import {createEmptyDecoration, isValidDecoration} from "../model/decoration";
-    import Panel from "./panel.svelte"
+    import ColorPanel from "./ColorPanel.svelte"
 
     let dispatcher = createEventDispatcher();
-
-    function RGBAToHex(rgba) {
-        const {r, g, b} = rgba;
-        let rHex = r.toString(16);
-        let gHex = g.toString(16);
-        let bHex = b.toString(16);
-
-        if (rHex.length == 1)
-            rHex = "0" + rHex;
-        if (gHex.length == 1)
-            gHex = "0" + gHex;
-        if (bHex.length == 1)
-            bHex = "0" + bHex;
-
-        return ("#" + rHex + gHex + bHex).toUpperCase();
-    }
 
     function tagDecoration(str: string, decoration: Decoration) {
         let result = str;
@@ -67,11 +50,8 @@
         <div>
             <input type="checkbox" bind:checked={decoration.colorEnabled}/>
         </div>
-        <Panel name="設定変更">
-            <span slot="name" style="color: {decoration.color}">{decoration.color}</span>
-            <HsvPicker on:colorChange={(rgba) => {decoration.color = RGBAToHex(rgba.detail)}}
-                       startColor={decoration.color}/>
-        </Panel>
+        <ColorPanel on:colorChange={(e) => decoration.color = e.detail}
+                    color={decoration.color}/>
     </td>
     <td><input type="checkbox" bind:checked={decoration.bold}/></td>
     <td><input type="checkbox" bind:checked={decoration.italics}/></td>
@@ -85,7 +65,7 @@
             {@html tagDecoration(decoration.startChar + "サンプル" + decoration.endChar, decoration)}
         {/if}
     </td>
-    <td class="icon" style="padding-left: 3em" on:click={dispatcher("delete", decoration)}>
+    <td class="icon" style="padding-left: 3em" on:click={() => dispatcher("delete", decoration)}>
         <FaTrashAlt/>
     </td>
 </tr>
