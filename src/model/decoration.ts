@@ -32,7 +32,7 @@ export function isValidDecoration(decoration: Decoration): boolean {
         !decoration.endChar.includes(decoration.startChar);
 }
 
-import {writable} from 'svelte/store';
+import {writable} from "svelte/store";
 
 const {subscribe, set, update} = writable([createEmptyDecoration()] as Decoration[]);
 

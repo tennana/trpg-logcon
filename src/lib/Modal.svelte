@@ -6,7 +6,7 @@
 
 	let modal;
 
-	const handle_keydown = e => {
+	const handle_keydown = (e) => {
 		if (e.key === 'Escape') {
 			close();
 			return;
@@ -28,13 +28,13 @@
 		}
 	};
 
-	const previously_focused = typeof document !== 'undefined' && document.activeElement;
+	const previously_focused = (typeof document !== 'undefined' && document.activeElement);
 
-	if (previously_focused) {
-		onDestroy(() => {
-			previously_focused.focus();
-		});
-	}
+    onDestroy(() => {
+      if (previously_focused) {
+        previously_focused.focus();
+      }
+    });
 
 	onMount(() => {
 		modal.scrollTo(0,0)

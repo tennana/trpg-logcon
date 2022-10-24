@@ -5,7 +5,7 @@ import {DiscordMateCsv} from "./discordMateCsv";
 export interface InputConverter {
     canParse(input: File): Promise<InputConverter>;
 
-    parse(file: File);
+    parse(file: File): void;
 }
 
 const CONVERTERS = [

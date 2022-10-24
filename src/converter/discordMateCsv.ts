@@ -1,4 +1,5 @@
-import {parse, Parser} from "papaparse";
+import { parse, Parser } from "papaparse";
+import type { ParseStepResult } from "papaparse";
 import {sayStore} from "../model/say";
 import {speakerStore} from "../model/speaker";
 import type {InputConverter} from "./converter";
@@ -18,16 +19,17 @@ export class DiscordMateCsv implements InputConverter {
 
     parse(file: File) {
         parse(file, {
-            step: this.step, header: true
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            step: DiscordMateCsv.step, header: true
         });
     }
 
-    step(results, _parser: Parser) {
+    static step(results: ParseStepResult<{Username: string, "User tag":string, Date: string, "Content": string}>, _parser: Parser): void {
         const data = results.data;
         if (!data["Username"]) {
             return;
         }
-        let speakerIdentity = data["Username"] + data["User tag"];
+        const speakerIdentity: string = data["Username"] + data["User tag"];
         speakerStore.addSpeaker({
             identity: speakerIdentity,
             name: data["Username"]

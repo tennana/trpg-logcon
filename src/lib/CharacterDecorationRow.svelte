@@ -83,13 +83,13 @@
         align-self: center;
     }
 
-    .sample :global .italics {
+    .sample :global(.italics) {
         display: inline-block;
         -webkit-transform: skewX(-15deg);
         -moz-transform: skewX(-15deg);
         -o-transform: skewX(-15deg);
         transform: skewX(-15deg);
-        -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=1, M12=-0.26794919243112214, M21=0, M22=1, SizingMethod='auto expand')";
+        filter: "progid:DXImageTransform.Microsoft.Matrix(M11=1, M12=-0.26794919243112214, M21=0, M22=1, SizingMethod='auto expand')";
     }
 
     .icon {

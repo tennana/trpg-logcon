@@ -1,4 +1,4 @@
-import {derived} from 'svelte/store';
+import {derived} from "svelte/store";
 import type {Message} from "./say";
 import {sayStore} from "./say";
 import type {Speaker} from "./speaker";

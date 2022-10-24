@@ -9,7 +9,7 @@
 
     let selectTemplate = templates[0];
 
-    const downloadURL = (data, fileName) => {
+    const downloadURL = (data: string, fileName: string) => {
         const a = document.createElement("a");
         a.href = data;
         a.download = fileName;

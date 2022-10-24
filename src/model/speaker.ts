@@ -1,4 +1,4 @@
-import {writable} from 'svelte/store';
+import {writable} from "svelte/store";
 
 const {subscribe, set, update} = writable([] as Speaker[]);
 
@@ -7,7 +7,7 @@ export interface ParagraphStyle {
     lineBreakNum: number;
 }
 
-export function createInitParagraph(color: string = '', lineBreakNum: number = 0): ParagraphStyle {
+export function createInitParagraph(color: string = "", lineBreakNum: number = 0): ParagraphStyle {
     return {
         color,
         lineBreakNum

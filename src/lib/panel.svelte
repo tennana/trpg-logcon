@@ -4,7 +4,7 @@
             class="header"
             on:click={() => {
 			dispatcher("select", group === key ? '' : key);
-			group = group === key ? '' : key;
+			group = group === key ? -1 : key;
 		}}
     >
         <slot name="name"><span>{name}</span></slot>

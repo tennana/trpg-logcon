@@ -1,4 +1,4 @@
-import type {ReadableStream} from "stream/web";
+import type { ReadableStream, ReadableStreamDefaultReadResult } from "stream/web";
 import {sayStore} from "../model/say";
 import {createInitParagraph, speakerStore} from "../model/speaker";
 import type {InputConverter} from "./converter";
@@ -28,38 +28,38 @@ export class CcfoliaV122Html implements InputConverter {
         let previous = "";
         let hashCode = 0;
         const regexp = this.rowRegexp;
-        const reader = (file.stream() as unknown as ReadableStream).getReader();
-        let textDecoder = new TextDecoder();
-        reader.read().then(function doChunk({value, done}) {
+        const reader = (file.stream() as unknown as ReadableStream<ArrayBuffer>).getReader();
+        const textDecoder = new TextDecoder();
+        void reader.read().then(function doChunk({value, done}: ReadableStreamDefaultReadResult<ArrayBuffer>): Promise<ReadableStreamDefaultReadResult<ArrayBuffer> | undefined> {
             previous += textDecoder.decode(value);
-            let result;
+            let result:RegExpExecArray;
             while (result = regexp.exec(previous)) {
-                hashCode = this.step(result, hashCode);
+                hashCode = CcfoliaV122Html.step(result, hashCode);
             }
             if (done) {
                 return;
             }
-            return reader.read().then(doChunk.bind(this));
-        }.bind(this));
+            return reader.read().then(doChunk);
+        });
     }
 
-    step(result: RegExpExecArray, previousHashCode: number) {
+    static step(result: RegExpExecArray, previousHashCode: number) {
         const data = {
             color: result[1],
             channel: result[2],
             name: result[3],
             content: result[4]
         };
-        let speakerIdentity = data.name;
+        const speakerIdentity = data.name;
         speakerStore.addSpeaker({
             identity: speakerIdentity,
             name: data.name,
             paragraph: createInitParagraph(data.color)
         })
-        let hashCode = Array.from(data.name + data.content)
+        const hashCode = Array.from(data.name + data.content)
             .reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0);
         sayStore.addMessage({
-            identity: previousHashCode + "-" + hashCode,
+            identity: `${previousHashCode}-${hashCode}`,
             speaker: speakerIdentity,
             content: data.content
                 .replaceAll("<br>", "\n")

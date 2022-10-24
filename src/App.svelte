@@ -9,7 +9,7 @@
     import {sayStore} from "./model/say";
     import {speakerStore} from "./model/speaker";
 
-    let files: File[];
+    let files: FileList;
     let loaded = false;
     $: if (files && files.length > 0 && files[0].name) {
         speakerStore.clear();
@@ -28,6 +28,10 @@
         }
         showReadme = true;
     }
+</script>
+<script context="module">
+  /*global __APP_VERSION__*/
+  const APP_VERSION = `${__APP_VERSION__}`;
 </script>
 
 <main class="container">
@@ -86,8 +90,8 @@
     {/if}
 </main>
 <footer>
-    <span><a href="javascript:void(0)" on:click={openReadme}>README & LICENSE</a></span><br/>
-    <span>logcone {__APP_VERSION__}</span>
+    <span><a href={"javascript:void(0)"} on:click={openReadme}>README & LICENSE</a></span><br/>
+    <span>logcone {APP_VERSION}</span>
 </footer>
 
 {#if showReadme}

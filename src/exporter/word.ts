@@ -1,16 +1,13 @@
 import * as zip from "@zip.js/zip.js";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
-import xmlescape from "xml-escape";
+import xmlEscape from "xml-escape";
 import type {Decoration, ValidDecoration} from "../model/decoration";
 import type {ConcatMessage} from "../model/exportMessage";
 import type {Exporter, ExportResult} from "./exporter";
-
-export const literalXMLDelimiter = '||';
-
 export default class Word implements Exporter {
     private _filePath: string;
-    private readonly LINE_SEPARATOR = `<w:r><w:rPr/><w:br/></w:r>`;
+    private readonly LINE_SEPARATOR = "<w:r><w:rPr/><w:br/></w:r>";
 
     public constructor(filePath: string) {
         this._filePath = filePath;
@@ -18,9 +15,9 @@ export default class Word implements Exporter {
 
     createScreenplay(messages: ConcatMessage[], decorations: ValidDecoration[], _scope: any): string {
         return messages.map((message) => {
-            let decoration = message.speakerSetting?.paragraph;
-            const colorTag = decoration?.color ? `<w:color w:val="${decoration.color}"/>` : '';
-            let contentXml = message.content.split("\n").map(this.createParagraph.bind(this, colorTag, decorations)).join(this.LINE_SEPARATOR)
+            const decoration = message.speakerSetting?.paragraph;
+            const colorTag = decoration?.color ? `<w:color w:val="${decoration.color}"/>` : "";
+            const contentXml = message.content.split("\n").map(this.createParagraph.bind(this, colorTag, decorations)).join(this.LINE_SEPARATOR)
             return `<w:p>
       <w:pPr>
         <w:pStyle w:val="Normal"/>
@@ -44,9 +41,10 @@ export default class Word implements Exporter {
         }).join("");
     }
 
-    createParagraph(colorTag: string, decorations: ValidDecoration[], paragraph: string) {
+    createParagraph(colorTag: string, decorations: ValidDecoration[], paragraph: string): string {
         const normalrPr = `<w:rPr>${colorTag}</w:rPr>`;
-        let paragraphXml = xmlescape(paragraph);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        let paragraphXml = xmlEscape(paragraph) ;
         decorations.forEach(decoration => {
             paragraphXml = paragraphXml.replace(decoration.match, (word) => {
                 let rPr = "";
@@ -74,9 +72,9 @@ export default class Word implements Exporter {
     }
 
     createTableRow(decorations: ValidDecoration[], message: ConcatMessage) {
-        let decoration = message.speakerSetting?.paragraph;
-        const colorTag = decoration?.color ? `<w:color w:val="${decoration.color}"/>` : '';
-        let contentXml = message.content.split("\n").map(this.createParagraph.bind(this, colorTag, decorations)).join(this.LINE_SEPARATOR)
+        const decoration = message.speakerSetting?.paragraph;
+        const colorTag = decoration?.color ? `<w:color w:val="${decoration.color}"/>` : "";
+        const contentXml = message.content.split("\n").map(this.createParagraph.bind(this, colorTag, decorations)).join(this.LINE_SEPARATOR)
         return `<w:tr>
         <w:trPr>
         </w:trPr>
@@ -144,28 +142,32 @@ export default class Word implements Exporter {
     </w:tbl>`;
     }
 
-    async transform(messages: ConcatMessage[], filteredDecorations: ValidDecoration[]): Promise<ExportResult> {
+    async transform(this: Word, messages: ConcatMessage[], filteredDecorations: ValidDecoration[]): Promise<ExportResult> {
         const templateDoc: ArrayBuffer = await fetch(`./template/${this._filePath}`).then(res => res.arrayBuffer());
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
         const baseZip = new PizZip(templateDoc);
         const doc = new Docxtemplater(baseZip, {
             paragraphLoop: true,
             linebreaks: true,
         });
         doc.render({
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             screenplay: this.createScreenplay.bind(this, messages, filteredDecorations),
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             table: this.createTable.bind(this, messages, filteredDecorations),
             messages: messages
         })
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
         const buf = doc.getZip().generate({
             type: "uint8array",
             compression: "STORE"
-        });
+        }) as Uint8Array;
         const oldZip = new zip.ZipReader(new zip.Uint8ArrayReader(buf));
         const newZip = new zip.ZipWriter(new zip.BlobWriter(), {
             msDosCompatible: true,
             zipCrypto: false
         });
-        for await(let entry of oldZip.getEntriesGenerator()) {
+        for await(const entry of oldZip.getEntriesGenerator()) {
             const content = await entry.getData(new zip.BlobWriter());
             if (!entry.directory)
                 await newZip.add(entry.filename, new zip.BlobReader(content), {directory: entry.directory});
@@ -181,15 +183,16 @@ export default class Word implements Exporter {
     }
 
     createDecorationRegExp(decoration: Decoration): RegExp {
-        return new RegExp(escapeRegExp(xmlescape(decoration.startChar)) + ".+?" + escapeRegExp(xmlescape(decoration.endChar)), "g")
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        return new RegExp(escapeRegExp(xmlEscape(decoration.startChar)) + ".+?" + escapeRegExp(xmlEscape(decoration.endChar)), "g")
     }
 }
 
 const reRegExp = /[\\^$.*+?()[\]{}|]/g,
     reHasRegExp = new RegExp(reRegExp.source);
 
-function escapeRegExp(string) {
+function escapeRegExp(string: string): string {
     return (string && reHasRegExp.test(string))
-        ? string.replace(reRegExp, '\\$&')
+        ? string.replace(reRegExp, "\\$&")
         : string;
 }

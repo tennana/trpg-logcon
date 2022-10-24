@@ -1,4 +1,5 @@
 import {parse, Parser} from "papaparse";
+import type { ParseStepResult } from "papaparse";
 import {sayStore} from "../model/say";
 import {speakerStore} from "../model/speaker";
 import type {InputConverter} from "./converter";
@@ -18,23 +19,24 @@ export class DiscordChatExporterCsv implements InputConverter {
 
     parse(file: File) {
         parse(file, {
-            step: this.step, header: true
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            step: DiscordChatExporterCsv.step, header: true
         });
     }
 
-    step(results, _parser: Parser) {
+    static step(results:ParseStepResult<{AuthorID: string, Author: string, Date: string, Content: string}>, _parser: Parser) {
         const data = results.data;
         if (!data["AuthorID"]) {
             return;
         }
-        let speakerIdentity = data["AuthorID"];
+        const speakerIdentity = data["AuthorID"];
         speakerStore.addSpeaker({
             identity: speakerIdentity,
             name: data["Author"]
         })
         sayStore.addMessage({
-            identity: "" + Array.from(data["Date"] + data["Content"] as string)
-                .reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
+            identity: Array.from(data["Date"] + data["Content"])
+                .reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0).toFixed(),
             speaker: speakerIdentity,
             content: data["Content"]
         })

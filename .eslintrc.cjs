@@ -25,6 +25,7 @@ module.exports = {
     rules: {
         "import/prefer-default-export": "off",
         "@typescript-eslint/quotes": ["error", "double"],
+        "@typescript-eslint/no-unsafe-argument": "off"
     },
     settings: {
         'svelte3/typescript': true
